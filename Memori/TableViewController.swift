@@ -11,9 +11,14 @@ class TableViewController: UITableViewController {
     
     //var noteList = NoteList()
     
-    var data: [String] = ["string1", "string2", "string3", "string4"]
+    //  var data: [String] = ["string1", "string2", "string3", "string4"]
     
-    var note: Note = Note()
+    //  var note: Note = Note()
+    var notes: [Note] = []
+    var lists: [List] = []
+    
+    //  notes[0] = "string1"    // this causes xcode to say I have multiple consecutive commands
+    
     
     //  could be current note
     var currentItem: String = ""
@@ -27,6 +32,17 @@ class TableViewController: UITableViewController {
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
         //self.navigationItem.rightBarButtonItem = self.editButtonItem
         
+        notes.append(Note(title: "Note 1", body: "Note Body 1"))
+        notes.append(Note(title: "Note 2", body: "Note Body 2"))
+        notes.append(Note(title: "Note 3", body: "Note Body 3"))
+        notes.append(Note(title: "Note 4", body: "Note Body 4"))
+        
+        
+        
+        //  lists.append(List(title: "List 1"))
+        //  lists.append(List(title: "List 2"))
+        //  lists.append(List(title: "List 3"))
+        //  lists.append(List(title: "List 4"))
         
     }
 
@@ -34,19 +50,22 @@ class TableViewController: UITableViewController {
 
     override func numberOfSections(in tableView: UITableView) -> Int {
         // #warning Incomplete implementation, return the number of sections
-        return 1
+        return 2
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
-        return data.count
+        //  return data.count
+        return notes.count
     }
+    
 
     // this function iterates through the array to populate the table
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let noteCell = tableView.dequeueReusableCell(withIdentifier: "noteCell", for: indexPath)
 
-        noteCell.textLabel?.text = data[indexPath.row]  // indexPath passes in the index of the cell currently being iterated
+        //  noteCell.textLabel?.text = data[indexPath.row]  // indexPath passes in the index of the cell currently being iterated
+        noteCell.textLabel?.text = notes[indexPath.row].title
 
         return noteCell
     }
@@ -91,7 +110,8 @@ class TableViewController: UITableViewController {
     // MARK: - Navigation
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        currentItem = data[indexPath.row]
+        //  currentItem = data[indexPath.row]
+        currentItem = notes[indexPath.row].title
         performSegue(withIdentifier: "showNote", sender: nil)
     }
 

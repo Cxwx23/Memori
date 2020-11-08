@@ -7,6 +7,12 @@
 
 import UIKit
 
+struct List {
+    var title: String
+    var checklist: [String]
+}
+
+/*
 class List: NSObject {
     static let defualtTitle = ""
     static let defaultList: [String] = []
@@ -29,3 +35,4 @@ class List: NSObject {
     }
     
 }
+*/

@@ -7,6 +7,12 @@
 
 import UIKit
 
+struct Note {
+    var title: String
+    var body: String
+}
+
+/*
 class Note: NSObject {
     static let defualtTitle = "Default Note Title"
     static let defaultBody = "This is the default Note body"
@@ -29,4 +35,4 @@ class Note: NSObject {
     }
     
 }
-
+*/
