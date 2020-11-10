@@ -7,24 +7,27 @@
 
 import UIKit
 
+//  This class handles changes to the individual note views
 class NoteViewController: UIViewController {
     
-    
+    //  Connection to the text view area on the Note View
     @IBOutlet weak var textView: UITextView!
-    var text: String = "text"
+    var text: String = ""   //  A variable to hold the text to be displayed
 
+    //  Runs when the view loads for the first time
     override func viewDidLoad() {
+        //  You always need to run the superclasses constructor in iOS development
         super.viewDidLoad()
-        // Do any additional setup after loading the view.
     
-        //  This currently displays the title and notes from the table view when the view loads the first time
+        //  This displays the title and notes from the table view when the view loads the first time
         textView.text = text
+    
     }
     
-    
+    //  Runs whenever the view is selected, after the first time it is loaded
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        //  This currently displays the title and notes from the table view when the view appears after already having been loaded
+        //  This displays the title and notes from the table view when the view appears after already having been loaded
         textView.text = text
     }
     

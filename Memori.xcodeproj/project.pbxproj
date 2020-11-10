@@ -16,6 +16,7 @@
 		ED8E76E0255A310200455AF9 /* ListTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED8E76DF255A310200455AF9 /* ListTableViewController.swift */; };
 		ED8E76E4255A46DF00455AF9 /* Task.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED8E76E3255A46DF00455AF9 /* Task.swift */; };
 		ED8E76EC255A4A3A00455AF9 /* TaskViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED8E76EB255A4A3A00455AF9 /* TaskViewController.swift */; };
+		ED8E76F0255A604700455AF9 /* TaskTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED8E76EF255A604700455AF9 /* TaskTableViewController.swift */; };
 		EDE8060725568929006BCEFC /* Note.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDE8060625568929006BCEFC /* Note.swift */; };
 		EDE8060A2556893D006BCEFC /* List.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDE806092556893D006BCEFC /* List.swift */; };
 		EDE8060D25568C7E006BCEFC /* TableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDE8060C25568C7E006BCEFC /* TableViewController.swift */; };
@@ -34,6 +35,7 @@
 		ED8E76DF255A310200455AF9 /* ListTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListTableViewController.swift; sourceTree = "<group>"; };
 		ED8E76E3255A46DF00455AF9 /* Task.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Task.swift; sourceTree = "<group>"; };
 		ED8E76EB255A4A3A00455AF9 /* TaskViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskViewController.swift; sourceTree = "<group>"; };
+		ED8E76EF255A604700455AF9 /* TaskTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskTableViewController.swift; sourceTree = "<group>"; };
 		EDE8060625568929006BCEFC /* Note.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Note.swift; sourceTree = "<group>"; };
 		EDE806092556893D006BCEFC /* List.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = List.swift; sourceTree = "<group>"; };
 		EDE8060C25568C7E006BCEFC /* TableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableViewController.swift; sourceTree = "<group>"; };
@@ -74,6 +76,7 @@
 				ED73DE0325551EA800D8F7CB /* SceneDelegate.swift */,
 				EDE8060C25568C7E006BCEFC /* TableViewController.swift */,
 				ED8E76DF255A310200455AF9 /* ListTableViewController.swift */,
+				ED8E76EF255A604700455AF9 /* TaskTableViewController.swift */,
 				ED73DE0525551EA800D8F7CB /* NoteViewController.swift */,
 				EDE806112557B497006BCEFC /* ListViewController.swift */,
 				ED8E76EB255A4A3A00455AF9 /* TaskViewController.swift */,
@@ -163,6 +166,7 @@
 				ED73DE0225551EA800D8F7CB /* AppDelegate.swift in Sources */,
 				ED8E76E0255A310200455AF9 /* ListTableViewController.swift in Sources */,
 				ED73DE0425551EA800D8F7CB /* SceneDelegate.swift in Sources */,
+				ED8E76F0255A604700455AF9 /* TaskTableViewController.swift in Sources */,
 				EDE8060A2556893D006BCEFC /* List.swift in Sources */,
 				EDE8060725568929006BCEFC /* Note.swift in Sources */,
 				ED8E76EC255A4A3A00455AF9 /* TaskViewController.swift in Sources */,

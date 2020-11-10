@@ -9,28 +9,35 @@ import UIKit
 
 class ListViewController: UIViewController {
     
+    //  A connection to the text view ovject on the List View Object in the storyboard
     @IBOutlet weak var listTextView: UITextView!
-    //var list: List = List(title: "", checklist: [""])
-    var listTitle: String = ""
-    var checklist: [String] = [""]
+    
+    var listTitle: String = ""      //  Variable to hold the title of the checklist
+    var checklist: [String] = [""]  //  Variable to hold the actual checklist
 
+    //  Runs when the List View runs for the first time
     override func viewDidLoad() {
+        //  You always need to run the superclasses constructor in iOS development
         super.viewDidLoad()
-
-        // Do any additional setup after loading the view.
         
-        //  listTextView.text = list.title
+        //  Adds the title of the checklist to the view
         listTextView.text = listTitle
+        
+        //  Loops through the checklist adding the items on the list to the view
         for item in checklist {
             listTextView.text.append("\n" + item)
         }
     }
     
-    
+    //  Runs whenever the view is selected, after the first time the view is loaded
     override func viewDidAppear(_ animated: Bool) {
+        //  You always need to run the superclasses constructor in iOS development
         super.viewDidAppear(animated)
+        
         //  This currently displays the title from the table view when the view appears after already having been loaded
         listTextView.text = listTitle
+        
+        //  Loops through the checklist adding the items on the list to the view
         for item in checklist {
             listTextView.text.append("\n" + item)
         }

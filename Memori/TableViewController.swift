@@ -8,49 +8,114 @@
 import UIKit
 
 class TableViewController: UITableViewController {
+    //  Connects this table view controller to the table view for notes in the storyboard
+    @IBOutlet var noteTable: UITableView!       //  this is new and may not be needed
     
-    //var noteList = NoteList()
-    
-    //  var data: [String] = ["string1", "string2", "string3", "string4"]
-    
-    //  var note: Note = Note()
     var notes: [Note] = []
-    //var lists: [List] = []
     
-    //  notes[0] = "string1"    // this causes xcode to say I have multiple consecutive commands
-    
-    
-    //  could be current note
-    //var currentItem: String = ""
     var currentItem: String = ""
+    
+    //var selectedRow = -1
+    //var newRowText: String = ""
+    
+    //var fileURL: URL!
+    
+    
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        // Uncomment the following line to preserve selection between presentations
-        // self.clearsSelectionOnViewWillAppear = false
+        // Uncomment the following line to preserve selection between presentations. Note: this was in the template for the class
+        self.clearsSelectionOnViewWillAppear = false
 
-        // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-        //self.navigationItem.rightBarButtonItem = self.editButtonItem
+        // Uncomment the following line to display an Edit button in the navigation bar for this view controller - Note: this was in the template for the class
+        self.navigationItem.rightBarButtonItem = self.editButtonItem
         
         notes.append(Note(title: "Note 1", body: "Note Body 1"))
         notes.append(Note(title: "Note 2", body: "Note Body 2"))
         notes.append(Note(title: "Note 3", body: "Note Body 3"))
-        notes.append(Note(title: "Note 4", body: "Note Body 4"))
         
-        //let checklist1: [String] = ["do something 1", "do something 2"]
-        //lists.append(List(title: "List 1", checklist: checklist1))
-        //let checklist2: [String] = ["do something 3", "do something 4"]
-        //lists.append(List(title: "List 2", checklist: checklist2))
-        //let checklist3: [String] = ["do something 5", "do something 6"]
-        //lists.append(List(title: "List 3", checklist: checklist3))
-        //  lists.append(List(title: "List 3"))
-        //  lists.append(List(title: "List 4"))
+        //  sets the datasource for the noteTable object -
+        noteTable.dataSource = self //  this is new and may not be needed
+        noteTable.delegate = self   //  not yet sure what this does
+        
+        //  creates the behavior of the button that will be used to add notes to the list on the table
+        let addNoteButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addNote))
+        //  creates the actual add note button in the upper right corner
+        self.navigationItem.rightBarButtonItem = addNoteButton
+        //  creates an edit button on the upper left hand corner
+        self.navigationItem.leftBarButtonItem = editButtonItem
+        
+        
+        // accesses the document directory
+        //  let baseURL = try! FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false)
+        
+        // accesses the notes.txt file.
+        //  fileURL = baseURL.appendingPathComponent("notes.txt")
+        
+        // load data from persistent storage
+        //  load()
+    }
+    
+    /*
+    override func viewWillAppear(_ animated: Bool) {
+        
+        super.viewWillAppear(animated)
+        
+        if selectedRow == -1 {
+            return
+        }
+        
+        data[selectedRow] = newRowText
+        //noteData[selectedRow] = note
+        
+        if newRowText == "" {
+            data.remove(at: selectedRow)
+            //noteData.remove(at: selectedRow)
+        }
+        
+        table.reloadData()
+        
+        save()
+    }
+    */
+    
+    
+    
+    
+    @objc func addNote() {
+        
+        //  Eliminates the ability to add rows while the table is in editing mode
+        if noteTable.isEditing {
+            return
+        }
+        
+        let newTitle: String = "Item \(notes.count + 1)"
+        
+        //  creates a new note with the entered title and an empty note (for now)
+        let note: Note = Note(title: newTitle, body: "")
+        
+        //  inserts the note into the notes array
+        notes.insert(note, at: 0)
+        
+        //  sets the value of index path to row 0 and section 0 - basically just adding the new note to the top of the table view
+        let indexPath: IndexPath = IndexPath(row: 0, section: 0)
+        
+        //  Adds the new row
+        noteTable.insertRows(at: [indexPath], with: .automatic)
+        
+        /*
+        table.selectRow(at: indexPath, animated: true, scrollPosition: .none)
+        
+        // go into detail view of note
+        self.performSegue(withIdentifier: "detail", sender: nil)
+        */
         
     }
 
     // MARK: - Table view data source
 
+    //   This is set to 1 because we are only creating one section with multiple rows
     override func numberOfSections(in tableView: UITableView) -> Int {
         // #warning Incomplete implementation, return the number of sections
         return 1
@@ -64,7 +129,8 @@ class TableViewController: UITableViewController {
 
     // this function iterates through the array to populate the table
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let noteCell = tableView.dequeueReusableCell(withIdentifier: "noteCell", for: indexPath)
+        //  indexPath is sort of like an iterator in C++ and returns an array of two ints representing the row and section of a given table cell
+        let noteCell = tableView.dequeueReusableCell(withIdentifier: "noteCell", for: indexPath)    //  do I not neew "with identifier??? Check this out after we attempt persistance
         
         noteCell.textLabel?.text = notes[indexPath.row].title
 
@@ -72,9 +138,27 @@ class TableViewController: UITableViewController {
         
     }
     
-
+    
+    override func setEditing(_ editing: Bool, animated: Bool) {
+        //  You always have to call the constructore of the superclass in iOS
+        super.setEditing(editing, animated: animated)
+        //  calls the set editing class of the table object
+        noteTable.setEditing(editing, animated: animated)
+        
+        //  save()
+    }
+    
+    
+    
+    
+    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        notes.remove(at: indexPath.row)
+        noteTable.deleteRows(at: [indexPath], with: .fade)
+        
+    }
+        
     /*
-    // Override to support conditional editing of the table view.
+    // Override to support conditional editing of the table view. - This was part of the template for the class
     override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
         // Return false if you do not want the specified item to be editable.
         return true
@@ -82,7 +166,7 @@ class TableViewController: UITableViewController {
     */
 
     /*
-    // Override to support editing the table view.
+    // Override to support editing the table view.  - This was part of the template for the class
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
             // Delete the row from the data source
@@ -94,14 +178,14 @@ class TableViewController: UITableViewController {
     */
 
     /*
-    // Override to support rearranging the table view.
+    // Override to support rearranging the table view.  - This was part of the template for the class
     override func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
 
     }
     */
 
     /*
-    // Override to support conditional rearranging of the table view.
+    // Override to support conditional rearranging of the table view.  - This was part of the template for the class
     override func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
         // Return false if you do not want the item to be re-orderable.
         return true
@@ -111,15 +195,17 @@ class TableViewController: UITableViewController {
     
     // MARK: - Navigation
     
+    //  Gets the selected row from the variable 'indexPath', which is an array with 2 values (number of rows and number of sections
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        //  currentItem = data[indexPath.row]
+    
         currentItem = notes[indexPath.row].title + "\n" + notes[indexPath.row].body
+        
         print("indexPath = \(indexPath)")
-        //  currentItem = notes[indexPath.row]
+        
         performSegue(withIdentifier: "showNote", sender: nil)
     }
 
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
+    // In a storyboard-based application, you will often want to do a little preparation before navigation  - This was part of the template for the class
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         // Get the new view controller using segue.destination.
         // Pass the selected object to the new view controller.
@@ -128,5 +214,47 @@ class TableViewController: UITableViewController {
         }
     }
     
-
+    /*
+    func save() {
+        // will want to create a property and store multiple keys in that property,
+        // instead of just "notes" (so we can include to-do's reminders, tasks, and projects.)
+        // UserDefaults.standard.set(data, forKey: "notes") <- this was the original way we did it which didn't save to a .txt.
+        let a = NSArray(array: data)
+        //let a = NSArray(array: noteData)
+        
+        do {
+            try a.write(to: fileURL)
+        } catch {
+            print("error writing to file")
+        }
+        
+    }
+    
+    
+    func load() {
+        // if the data is loaded into loaded data, call everything inside the if statement
+        //if let loadedData:[String] = UserDefaults.standard.value(forKey: "notes") as? [String] {
+        
+        
+        
+        if let loadedData:[String] = NSArray(contentsOf:fileURL) as? [String] {
+            // set data equal to the data from persistent storage
+            data = loadedData
+            
+            // reload the table.
+            table.reloadData()
+        }
+        
+        
+        
+        if let loadedData:[Note] = NSArray(contentsOf:fileURL) as? [Note] {
+            // set data equal to the data from persistent storage
+            note = loadedData
+            
+            // reload the table.
+            table.reloadData()
+        }
+        
+    }
+    */
 }
