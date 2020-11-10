@@ -16,30 +16,15 @@ class NoteViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
-        
-        // This is all preliminary testing for when using Note Objects
-        /*
-        let note = Note()
-        // this is not working yet
-        print("title: \(note.title.description)")
-        print("body: \(note.body.description)")
-        print("count: \(note.count.description)")
-        
-        if note.title != Note.defualtTitle {
-            note.title = "New Title"
-            note.body = "New Body"
-            note.count = 99
-        }
-        */
     
-        //  This currently displays the title from the table view when the view loads the first time
+        //  This currently displays the title and notes from the table view when the view loads the first time
         textView.text = text
     }
     
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        //  This currently displays the title from the table view when the view appears after already having been loaded
+        //  This currently displays the title and notes from the table view when the view appears after already having been loaded
         textView.text = text
     }
     

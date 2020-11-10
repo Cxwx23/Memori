@@ -1,28 +1,32 @@
 //
-//  TableViewController.swift
+//  ListTableViewController.swift
 //  Memori
 //
-//  Created by Cole Warner on 11/7/20.
+//  Created by Cole Warner on 11/9/20.
 //
 
 import UIKit
 
-class TableViewController: UITableViewController {
+class ListTableViewController: UITableViewController {
     
     //var noteList = NoteList()
     
     //  var data: [String] = ["string1", "string2", "string3", "string4"]
     
     //  var note: Note = Note()
-    var notes: [Note] = []
-    //var lists: [List] = []
+    //var notes: [Note] = []
+    var lists: [List] = []
+    var checklist: [String] = [""]
     
     //  notes[0] = "string1"    // this causes xcode to say I have multiple consecutive commands
     
     
     //  could be current note
     //var currentItem: String = ""
+    //var currentItem: String = ""
+    //  var currentItem: List = List(title: "", checklist: [""])
     var currentItem: String = ""
+    var currentItemChecklist: [String] = [""]
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -31,22 +35,14 @@ class TableViewController: UITableViewController {
         // self.clearsSelectionOnViewWillAppear = false
 
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-        //self.navigationItem.rightBarButtonItem = self.editButtonItem
+        // self.navigationItem.rightBarButtonItem = self.editButtonItem
         
-        notes.append(Note(title: "Note 1", body: "Note Body 1"))
-        notes.append(Note(title: "Note 2", body: "Note Body 2"))
-        notes.append(Note(title: "Note 3", body: "Note Body 3"))
-        notes.append(Note(title: "Note 4", body: "Note Body 4"))
-        
-        //let checklist1: [String] = ["do something 1", "do something 2"]
-        //lists.append(List(title: "List 1", checklist: checklist1))
-        //let checklist2: [String] = ["do something 3", "do something 4"]
-        //lists.append(List(title: "List 2", checklist: checklist2))
-        //let checklist3: [String] = ["do something 5", "do something 6"]
-        //lists.append(List(title: "List 3", checklist: checklist3))
-        //  lists.append(List(title: "List 3"))
-        //  lists.append(List(title: "List 4"))
-        
+        let checklist1: [String] = ["do something 1", "do something 2"]
+        lists.append(List(title: "List 1", checklist: checklist1))
+        let checklist2: [String] = ["do something 3", "do something 4"]
+        lists.append(List(title: "List 2", checklist: checklist2))
+        let checklist3: [String] = ["do something 5", "do something 6"]
+        lists.append(List(title: "List 3", checklist: checklist3))
     }
 
     // MARK: - Table view data source
@@ -56,20 +52,20 @@ class TableViewController: UITableViewController {
         return 1
     }
 
-    //  Returns the number of rows in the array holding the objects for the table
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return notes.count
+        // #warning Incomplete implementation, return the number of rows
+        
+        return lists.count
     }
+
     
-
-    // this function iterates through the array to populate the table
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let noteCell = tableView.dequeueReusableCell(withIdentifier: "noteCell", for: indexPath)
-        
-        noteCell.textLabel?.text = notes[indexPath.row].title
+        let listCell = tableView.dequeueReusableCell(withIdentifier: "listCell", for: indexPath)
 
-        return noteCell
-        
+        // Configure the cell...
+        listCell.textLabel?.text = lists[indexPath.row].title
+
+        return listCell
     }
     
 
@@ -89,7 +85,7 @@ class TableViewController: UITableViewController {
             tableView.deleteRows(at: [indexPath], with: .fade)
         } else if editingStyle == .insert {
             // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-        }
+        }    
     }
     */
 
@@ -113,18 +109,22 @@ class TableViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         //  currentItem = data[indexPath.row]
-        currentItem = notes[indexPath.row].title + "\n" + notes[indexPath.row].body
+        //currentItem = lists[indexPath.row].title + "\n"
+        currentItem = lists[indexPath.row].title
+        currentItemChecklist = lists[indexPath.row].checklist
+           
         print("indexPath = \(indexPath)")
         //  currentItem = notes[indexPath.row]
-        performSegue(withIdentifier: "showNote", sender: nil)
+        performSegue(withIdentifier: "showList", sender: nil)
     }
 
     // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         // Get the new view controller using segue.destination.
         // Pass the selected object to the new view controller.
-        if let noteViewController = segue.destination as? NoteViewController {
-            noteViewController.text = currentItem
+        if let listViewController = segue.destination as? ListViewController {
+            listViewController.listTitle = currentItem
+            listViewController.checklist = currentItemChecklist
         }
     }
     
