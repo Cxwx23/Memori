@@ -11,21 +11,16 @@ class TableViewController: UITableViewController {  //, UITableViewDataSource, U
     //  Connects this table view controller to the table view for notes in the storyboard
     @IBOutlet var noteTable: UITableView!       //  this is new and may not be needed
     
-    var notes: [Note] = []
-    var note: Note = Note(note: "")
-    
-    
-    
-    
+    var notes: [String] = []
+    //  var notes: [Note] = []
+    // var note: Note = Note(note: "")
+
     var currentItem: String = ""
-    
     var selectedRow = -1
     var newRowText: String = ""
     
     var fileURL: URL!
     
-    
-
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -36,13 +31,15 @@ class TableViewController: UITableViewController {  //, UITableViewDataSource, U
         //self.navigationItem.rightBarButtonItem = self.editButtonItem
         
         // this was from before I added persistence
-        //notes.append(Note(title: "Note 1", body: "Note Body 1"))
-        //notes.append(Note(title: "Note 2", body: "Note Body 2"))
-        //notes.append(Note(title: "Note 3", body: "Note Body 3"))
+        //  notes.append(Note(note: "note 1"))
+        //  notes.append(Note(note: "Note 2"))
+        //  notes.append(Note(note: "Note 3"))
+        
         
         //  sets the datasource for the noteTable object -
         noteTable.dataSource = self //  this is new and may not be needed
         noteTable.delegate = self   //  not yet sure what this does
+        self.title = "Notes"
         
         //  creates the behavior of the button that will be used to add notes to the list on the table
         let addNoteButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addNote))
@@ -72,7 +69,7 @@ class TableViewController: UITableViewController {  //, UITableViewDataSource, U
         }
         
         //data[selectedRow] = newRowText
-        notes[selectedRow] = note
+        notes[selectedRow] = newRowText
         
         if newRowText == "" {
             //data.remove(at: selectedRow)
@@ -80,13 +77,9 @@ class TableViewController: UITableViewController {  //, UITableViewDataSource, U
         }
         
         noteTable.reloadData()
-        //table.reloadData()
         
         save()
     }
-    
-    
-    
     
     
     @objc func addNote() {
@@ -96,10 +89,9 @@ class TableViewController: UITableViewController {  //, UITableViewDataSource, U
             return
         }
         
-        //let newTitle: String = "Item \(notes.count + 1)"
-        
         //  creates a new note with the entered title and an empty note (for now)
-        let note: Note = Note(note: "")
+        //let note: Note = Note(note: "")
+        let note: String = ""
         
         //  inserts the note into the notes array
         notes.insert(note, at: 0)
@@ -109,14 +101,12 @@ class TableViewController: UITableViewController {  //, UITableViewDataSource, U
         
         //  Adds the new row
         noteTable.insertRows(at: [indexPath], with: .automatic)
-        
-        
         noteTable.selectRow(at: indexPath, animated: true, scrollPosition: .none)
         
         // go into detail view of note
         self.performSegue(withIdentifier: "showNote", sender: nil)
         
-        save()
+        //  save()
         
     }
 
@@ -137,39 +127,35 @@ class TableViewController: UITableViewController {  //, UITableViewDataSource, U
     // this function iterates through the array to populate the table
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         //  indexPath is sort of like an iterator in C++ and returns an array of two ints representing the row and section of a given table cell
-        let noteCell = tableView.dequeueReusableCell(withIdentifier: "noteCell", for: indexPath)    //  do I not neew "with identifier??? Check this out after we attempt persistance
+        let noteCell: UITableViewCell = tableView.dequeueReusableCell(withIdentifier: "noteCell")! //, for: indexPath)
         
-        // this is the way it was originally done in busynote
-        //  let notecell: UITableViewCell = UITableViewCell()
+        //  sets the text in my textLabel storyboard object to the value in the notes[].note string at indexPath.row
+        //  noteCell.textLabel?.text = notes[indexPath.row].note
+        noteCell.textLabel?.text = notes[indexPath.row]
         
-        //if notes[indexPath.row].title != nil {
-        noteCell.textLabel?.text = notes[indexPath.row].note
-            
-        //}
-        //else {
-        //    noteCell.textLabel?.text = ""
-        //}
-        
-
+        //  returns the cell at the current index
         return noteCell
         
     }
     
-    
+    // This function runs when the edit button is pressed
     override func setEditing(_ editing: Bool, animated: Bool) {
         //  You always have to call the constructore of the superclass in iOS
         super.setEditing(editing, animated: animated)
         //  calls the set editing class of the table object
         noteTable.setEditing(editing, animated: animated)
-        
-        //  save()
+        //  calls the save function
+        save()
     }
     
-    
+    //  removes a row when the delete button is pressed while in editing mode (after pressing the edit button
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        //  removes the data from the notes array
         notes.remove(at: indexPath.row)
+        //  removes the row from the table view
         noteTable.deleteRows(at: [indexPath], with: .fade)
-        save()
+        //  calls the save function
+        //  save()
     }
         
     /*
@@ -215,17 +201,17 @@ class TableViewController: UITableViewController {  //, UITableViewDataSource, U
         //var title: String = ""
         //var body: String = ""
     
-        var note: String = ""
+        //  var note: String = ""
         
         //if notes[indexPath.row].title != nil {
             //title = notes[indexPath.row].title //?? ""
             //body = notes[indexPath.row].body //?? ""
-        note = notes[indexPath.row].note
+        //  note = notes[indexPath.row].note
             //currentItem = title + "\n" + body
-        currentItem = note
+        //  currentItem = note
         //}
 
-        print("indexPath = \(indexPath)")
+        //  print("indexPath = \(indexPath)")
         
         performSegue(withIdentifier: "showNote", sender: nil)
     }
@@ -234,43 +220,65 @@ class TableViewController: UITableViewController {  //, UITableViewDataSource, U
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         // Get the new view controller using segue.destination.
         // Pass the selected object to the new view controller.
+        /*
         if let noteViewController = segue.destination as? NoteViewController {
             noteViewController.text = currentItem
         }
+        */
+        
+        let noteViewController = segue.destination as! NoteViewController
+        
+        selectedRow = noteTable.indexPathForSelectedRow!.row
+        
+        noteViewController.masterView = self
+        
+        noteViewController.setText(t: notes[selectedRow])
     }
     
     
     func save() {
-        // will want to create a property and store multiple keys in that property,
-        // instead of just "notes" (so we can include to-do's reminders, tasks, and projects.)
-        //UserDefaults.standard.set(notes, forKey: "notes") //    <- this was the original way we did it which didn't save to a .txt.
+       
+        UserDefaults.standard.set(notes, forKey: "notes") //    <- this was the original way we did it which didn't save to a .txt.
+        
+        
         let a = NSArray(array: notes as [Any])
-        //let a = NSArray(array: noteData)
         
         do {
             try a.write(to: fileURL)
         } catch {
             print("error writing to file")
         }
+ 
+        
     }
     
     
     func load() {
         // if the data is loaded into loaded data, call everything inside the if statement
-        //if let loadedData:[String] = UserDefaults.standard.value(forKey: "notes") as? [String] {
-        var loadedData: [Note]? = []
+        //if let loadedData:[Note] = UserDefaults.standard.value(forKey: "notes") as? [Note] {
+        if let loadedData:[String] = UserDefaults.standard.value(forKey: "notes") as? [String] {
+            
+            notes = loadedData
+            noteTable.reloadData()
+            
+        }
+        
+        //`var loadedData: [Note] = []
         
         //loadedData = NSArray(contentsOf:fileURL) as? [Note]
         
+        /*
         if NSArray(contentsOf:fileURL) != nil {//as? [Note]? != nil {
         //if loadedData != nil {
             loadedData = NSArray(contentsOf:fileURL) as? [Note]
         
         //  if let loadedData: = NSArray(contentsOf:fileURL) as? [Note] {
             // set data equal to the data from persistent storage
-            notes = loadedData!
+            notes = loadedData
             // reload the table.
             noteTable.reloadData()
         }
+        */
+        
     }
 }
