@@ -7,18 +7,22 @@
 
 import UIKit
 
-class TableViewController: UITableViewController {
+class TableViewController: UITableViewController {  //, UITableViewDataSource, UITableViewDelegate {
     //  Connects this table view controller to the table view for notes in the storyboard
     @IBOutlet var noteTable: UITableView!       //  this is new and may not be needed
     
     var notes: [Note] = []
+    var note: Note = Note(note: "")
+    
+    
+    
     
     var currentItem: String = ""
     
-    //var selectedRow = -1
-    //var newRowText: String = ""
+    var selectedRow = -1
+    var newRowText: String = ""
     
-    //var fileURL: URL!
+    var fileURL: URL!
     
     
 
@@ -26,14 +30,15 @@ class TableViewController: UITableViewController {
         super.viewDidLoad()
 
         // Uncomment the following line to preserve selection between presentations. Note: this was in the template for the class
-        self.clearsSelectionOnViewWillAppear = false
+        //self.clearsSelectionOnViewWillAppear = false
 
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller - Note: this was in the template for the class
-        self.navigationItem.rightBarButtonItem = self.editButtonItem
+        //self.navigationItem.rightBarButtonItem = self.editButtonItem
         
-        notes.append(Note(title: "Note 1", body: "Note Body 1"))
-        notes.append(Note(title: "Note 2", body: "Note Body 2"))
-        notes.append(Note(title: "Note 3", body: "Note Body 3"))
+        // this was from before I added persistence
+        //notes.append(Note(title: "Note 1", body: "Note Body 1"))
+        //notes.append(Note(title: "Note 2", body: "Note Body 2"))
+        //notes.append(Note(title: "Note 3", body: "Note Body 3"))
         
         //  sets the datasource for the noteTable object -
         noteTable.dataSource = self //  this is new and may not be needed
@@ -48,16 +53,16 @@ class TableViewController: UITableViewController {
         
         
         // accesses the document directory
-        //  let baseURL = try! FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false)
+        let baseURL = try! FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false)
         
         // accesses the notes.txt file.
-        //  fileURL = baseURL.appendingPathComponent("notes.txt")
+        fileURL = baseURL.appendingPathComponent("notes.txt")
         
         // load data from persistent storage
-        //  load()
+        load()
     }
     
-    /*
+    
     override func viewWillAppear(_ animated: Bool) {
         
         super.viewWillAppear(animated)
@@ -66,19 +71,20 @@ class TableViewController: UITableViewController {
             return
         }
         
-        data[selectedRow] = newRowText
-        //noteData[selectedRow] = note
+        //data[selectedRow] = newRowText
+        notes[selectedRow] = note
         
         if newRowText == "" {
-            data.remove(at: selectedRow)
-            //noteData.remove(at: selectedRow)
+            //data.remove(at: selectedRow)
+            notes.remove(at: selectedRow)
         }
         
-        table.reloadData()
+        noteTable.reloadData()
+        //table.reloadData()
         
         save()
     }
-    */
+    
     
     
     
@@ -90,10 +96,10 @@ class TableViewController: UITableViewController {
             return
         }
         
-        let newTitle: String = "Item \(notes.count + 1)"
+        //let newTitle: String = "Item \(notes.count + 1)"
         
         //  creates a new note with the entered title and an empty note (for now)
-        let note: Note = Note(title: newTitle, body: "")
+        let note: Note = Note(note: "")
         
         //  inserts the note into the notes array
         notes.insert(note, at: 0)
@@ -104,12 +110,13 @@ class TableViewController: UITableViewController {
         //  Adds the new row
         noteTable.insertRows(at: [indexPath], with: .automatic)
         
-        /*
-        table.selectRow(at: indexPath, animated: true, scrollPosition: .none)
+        
+        noteTable.selectRow(at: indexPath, animated: true, scrollPosition: .none)
         
         // go into detail view of note
-        self.performSegue(withIdentifier: "detail", sender: nil)
-        */
+        self.performSegue(withIdentifier: "showNote", sender: nil)
+        
+        save()
         
     }
 
@@ -132,7 +139,17 @@ class TableViewController: UITableViewController {
         //  indexPath is sort of like an iterator in C++ and returns an array of two ints representing the row and section of a given table cell
         let noteCell = tableView.dequeueReusableCell(withIdentifier: "noteCell", for: indexPath)    //  do I not neew "with identifier??? Check this out after we attempt persistance
         
-        noteCell.textLabel?.text = notes[indexPath.row].title
+        // this is the way it was originally done in busynote
+        //  let notecell: UITableViewCell = UITableViewCell()
+        
+        //if notes[indexPath.row].title != nil {
+        noteCell.textLabel?.text = notes[indexPath.row].note
+            
+        //}
+        //else {
+        //    noteCell.textLabel?.text = ""
+        //}
+        
 
         return noteCell
         
@@ -149,12 +166,10 @@ class TableViewController: UITableViewController {
     }
     
     
-    
-    
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         notes.remove(at: indexPath.row)
         noteTable.deleteRows(at: [indexPath], with: .fade)
-        
+        save()
     }
         
     /*
@@ -197,9 +212,19 @@ class TableViewController: UITableViewController {
     
     //  Gets the selected row from the variable 'indexPath', which is an array with 2 values (number of rows and number of sections
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        //var title: String = ""
+        //var body: String = ""
     
-        currentItem = notes[indexPath.row].title + "\n" + notes[indexPath.row].body
+        var note: String = ""
         
+        //if notes[indexPath.row].title != nil {
+            //title = notes[indexPath.row].title //?? ""
+            //body = notes[indexPath.row].body //?? ""
+        note = notes[indexPath.row].note
+            //currentItem = title + "\n" + body
+        currentItem = note
+        //}
+
         print("indexPath = \(indexPath)")
         
         performSegue(withIdentifier: "showNote", sender: nil)
@@ -214,12 +239,12 @@ class TableViewController: UITableViewController {
         }
     }
     
-    /*
+    
     func save() {
         // will want to create a property and store multiple keys in that property,
         // instead of just "notes" (so we can include to-do's reminders, tasks, and projects.)
-        // UserDefaults.standard.set(data, forKey: "notes") <- this was the original way we did it which didn't save to a .txt.
-        let a = NSArray(array: data)
+        //UserDefaults.standard.set(notes, forKey: "notes") //    <- this was the original way we did it which didn't save to a .txt.
+        let a = NSArray(array: notes as [Any])
         //let a = NSArray(array: noteData)
         
         do {
@@ -227,34 +252,25 @@ class TableViewController: UITableViewController {
         } catch {
             print("error writing to file")
         }
-        
     }
     
     
     func load() {
         // if the data is loaded into loaded data, call everything inside the if statement
         //if let loadedData:[String] = UserDefaults.standard.value(forKey: "notes") as? [String] {
+        var loadedData: [Note]? = []
         
+        //loadedData = NSArray(contentsOf:fileURL) as? [Note]
         
+        if NSArray(contentsOf:fileURL) != nil {//as? [Note]? != nil {
+        //if loadedData != nil {
+            loadedData = NSArray(contentsOf:fileURL) as? [Note]
         
-        if let loadedData:[String] = NSArray(contentsOf:fileURL) as? [String] {
+        //  if let loadedData: = NSArray(contentsOf:fileURL) as? [Note] {
             // set data equal to the data from persistent storage
-            data = loadedData
-            
+            notes = loadedData!
             // reload the table.
-            table.reloadData()
+            noteTable.reloadData()
         }
-        
-        
-        
-        if let loadedData:[Note] = NSArray(contentsOf:fileURL) as? [Note] {
-            // set data equal to the data from persistent storage
-            note = loadedData
-            
-            // reload the table.
-            table.reloadData()
-        }
-        
     }
-    */
 }

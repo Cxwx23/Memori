@@ -8,8 +8,9 @@
 import UIKit
 
 struct Note {
-    var title: String
-    var body: String
+    //var title: String
+    //var body: String
+    var note: String
 }
 
 /*
