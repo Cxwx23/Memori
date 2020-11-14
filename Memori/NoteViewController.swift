@@ -27,11 +27,12 @@ class NoteViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        print("calling becomeFirstResponder")
+        //  print("calling becomeFirstResponder")
         textView.becomeFirstResponder()
     }
     
     //  Runs whenever the view is selected, after the first time it is loaded
+    
     /*
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
@@ -54,7 +55,8 @@ class NoteViewController: UIViewController {
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         masterView.newRowText = textView.text
-        print("calling resignFirstResponder")
+        //  print("calling resignFirstResponder")
+        //  super.save()    // this did not work
         textView.resignFirstResponder()
     }
 
