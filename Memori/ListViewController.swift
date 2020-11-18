@@ -14,6 +14,7 @@ class ListViewController: UIViewController {
     
     var listTitle: String = ""      //  Variable to hold the title of the checklist
     var checklist: [String] = [""]  //  Variable to hold the actual checklist
+    var masterView:ListTableViewController!
 
     //  Runs when the List View runs for the first time
     override func viewDidLoad() {
@@ -41,6 +42,24 @@ class ListViewController: UIViewController {
         for item in checklist {
             listTextView.text.append("\n" + item)
         }
+    }
+    
+    func setListTitle(t:String) {
+        
+        listTitle = t
+        
+        if isViewLoaded {
+            listTextView.text = t
+        }
+    }
+
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        masterView.newRowText = listTextView.text
+        //  print("calling resignFirstResponder")
+        //  super.save()    // this did not work
+        listTextView.resignFirstResponder()
     }
     
 

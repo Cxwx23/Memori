@@ -31,7 +31,7 @@
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="checklist" id="tqR-rJ-Cbp">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="checklistTable" id="tqR-rJ-Cbp">
                                         <rect key="frame" x="0.0" y="28" width="374" height="43.5"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="tqR-rJ-Cbp" id="tbm-DX-pbJ">
@@ -130,7 +130,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <textField opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="NAk-3y-G2G">
-                                <rect key="frame" x="68" y="101" width="188" height="34"/>
+                                <rect key="frame" x="20" y="101" width="374" height="34"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
@@ -143,7 +143,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="CGp-58-Zu2" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-2117" y="2312"/>
+            <point key="canvasLocation" x="-2118.840579710145" y="2311.6071428571427"/>
         </scene>
         <!--Task Item Scene-->
         <scene sceneID="A90-sP-M64">
@@ -190,6 +190,7 @@
                     </tableView>
                     <navigationItem key="navigationItem" title="Lists" largeTitleDisplayMode="always" id="QeO-We-bgy"/>
                     <connections>
+                        <outlet property="listTable" destination="Ate-UR-tho" id="dyK-oz-dTe"/>
                         <segue destination="xhw-ph-WGM" kind="show" identifier="showList" id="exy-gV-uPr"/>
                     </connections>
                 </tableViewController>
@@ -279,6 +280,7 @@
                 <tabBarController title="tabBar" automaticallyAdjustsScrollViewInsets="NO" interfaceStyle="light" id="Lit-cP-cq3" sceneMemberID="viewController">
                     <toolbarItems/>
                     <tabBar key="tabBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" translucent="NO" id="Tdx-sG-I0J">
+                        <rect key="frame" x="0.0" y="0.0" width="1000" height="1000"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <color key="selectedImageTintColor" systemColor="systemFillColor"/>
                     </tabBar>

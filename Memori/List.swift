@@ -7,32 +7,13 @@
 
 import UIKit
 
-struct List {
+class List: NSObject, Codable {
     var title: String
     var checklist: [String]
+    
+    init(title: String, checklist: [String]) {
+        self.title = title
+        self.checklist = checklist
+    }
 }
 
-/*
-class List: NSObject {
-    static let defualtTitle = ""
-    static let defaultList: [String] = []
-    
-    var title: String! = defualtTitle
-    var list: [String?] = defaultList
-    var count: Int = 0
-    
-    
-    override init() {
-        super.init()
-        
-    }
-    
-    init(title: String, count: Int, body: String, list: [String]) {
-        self.title = title
-        self.count = count
-        self.list = list
-        
-    }
-    
-}
-*/

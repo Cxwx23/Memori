@@ -17,15 +17,11 @@ class TableViewController: UITableViewController {
     var selectedRow = -1
     var newRowText: String = ""
     
-    var newNoteFileURL: URL!
+    var noteFileURL: URL!
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        // Uncomment the following line to preserve selection between presentations. Note: this was in the template for the class
-        //self.clearsSelectionOnViewWillAppear = false
-
-        
         //  sets the datasource for the noteTable object -
         noteTable.dataSource = self //  this is new and may not be needed
         noteTable.delegate = self   //  not yet sure what this does
@@ -43,7 +39,7 @@ class TableViewController: UITableViewController {
         let baseURL = try! FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false)
         
         // accesses the notes.txt file.
-        newNoteFileURL = baseURL.appendingPathComponent("SavedNoteArray.txt")    // used to be "notes.txt"
+        noteFileURL = baseURL.appendingPathComponent("SavedNoteArray.txt")    // used to be "notes.txt"
         
         // load data from persistent storage
         load()
@@ -51,7 +47,6 @@ class TableViewController: UITableViewController {
     
     
     override func viewWillAppear(_ animated: Bool) {
-        
         super.viewWillAppear(animated)
         
         if selectedRow == -1 {
@@ -73,7 +68,6 @@ class TableViewController: UITableViewController {
     
     
     @objc func addNote() {
-        
         //  Eliminates the ability to add rows while the table is in editing mode
         if noteTable.isEditing {
             return
@@ -180,7 +174,7 @@ class TableViewController: UITableViewController {
         let a = NSArray(array: notesToSave as [Any])
         
         do {
-            try a.write(to: newNoteFileURL)
+            try a.write(to: noteFileURL)
             print("saved note data")
         } catch {
             print("error writing to file")
@@ -192,7 +186,7 @@ class TableViewController: UITableViewController {
     func load() {
         
         //  if let loadedData: [String] = NSArray(contentsOf: noteFileURL) as? [String] {
-        if let loadedData: [String] = NSArray(contentsOf: newNoteFileURL) as? [String] {
+        if let loadedData: [String] = NSArray(contentsOf: noteFileURL) as? [String] {
             print("loaded note data")
             
             

@@ -13,4 +13,12 @@ struct Task {
     var notes: String
     var dueDate: Date
     
+    init(title: String, checklist: [String], notes: String, dueDate: Date) {
+        self.title = title
+        self.checklist = checklist
+        self.notes = notes
+        self.dueDate = dueDate
+    }
+    
+    
 }

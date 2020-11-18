@@ -8,67 +8,218 @@
 import UIKit
 
 class ListTableViewController: UITableViewController {
+    //  Connects this table view controller to the table view for notes in the storyboard
+    @IBOutlet var listTable: UITableView!
     
-    //var noteList = NoteList()
     
-    //  var data: [String] = ["string1", "string2", "string3", "string4"]
-    
-    //  var note: Note = Note()
-    //var notes: [Note] = []
-    var lists: [List] = []
+    var lists: [String] = []
+    var listData: [List] = []
     var checklist: [String] = [""]
     
-    //  notes[0] = "string1"    // this causes xcode to say I have multiple consecutive commands
+    var selectedRow = -1
+    var newRowText: String = ""
     
+    var listFileURL: URL!
     
-    //  could be current note
-    //var currentItem: String = ""
-    //var currentItem: String = ""
-    //  var currentItem: List = List(title: "", checklist: [""])
     var currentItem: String = ""
     var currentItemChecklist: [String] = [""]
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // Uncomment the following line to preserve selection between presentations
-        // self.clearsSelectionOnViewWillAppear = false
-
-        // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-        // self.navigationItem.rightBarButtonItem = self.editButtonItem
         
-        let checklist1: [String] = ["do something 1", "do something 2"]
-        lists.append(List(title: "List 1", checklist: checklist1))
-        let checklist2: [String] = ["do something 3", "do something 4"]
-        lists.append(List(title: "List 2", checklist: checklist2))
-        let checklist3: [String] = ["do something 5", "do something 6"]
-        lists.append(List(title: "List 3", checklist: checklist3))
+        //  sets the datasource for the listTable object -
+        listTable.dataSource = self
+        listTable.delegate = self
+        self.title = "Lists"
+        
+        //  creates the behavior of the button that will be used to add notes to the list on the table
+        let addListButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addList))
+        //  creates the actual add list button in the upper right corner
+        self.navigationItem.rightBarButtonItem = addListButton
+        //  creates an edit button on the upper left hand corner
+        self.navigationItem.leftBarButtonItem = editButtonItem
+        
+        
+        // accesses the document directory
+        let baseURL = try! FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false)
+        
+        // accesses the notes.txt file.
+        listFileURL = baseURL.appendingPathComponent("SavedListArray.txt")    // used to be "notes.txt"
+        
+        // load data from persistent storage
+        load()
     }
 
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        if selectedRow == -1 {
+            return
+        }
+        
+        //data[selectedRow] = newRowText
+        listData[selectedRow].title = newRowText
+        
+        if newRowText == "" {
+            //data.remove(at: selectedRow)
+            listData.remove(at: selectedRow)
+        }
+        
+        listTable.reloadData()
+        
+        save()  // looks like this may not need to be called unless its for persistence
+    }
+    
+    
+    @objc func addList() {
+        //  Eliminates the ability to add rows while the table is in editing mode
+        if listTable.isEditing {
+            return
+        }
+        
+        //  creates a new list with the entered title and an empty list (for now)
+        let list: List = List(title: "", checklist: [""])
+        
+        //  inserts the list into the lists array
+        listData.insert(list, at: 0)
+        
+        //  sets the value of index path to row 0 and section 0 - basically just adding the new list to the top of the table view
+        let indexPath: IndexPath = IndexPath(row: 0, section: 0)
+        
+        //  Adds the new row
+        listTable.insertRows(at: [indexPath], with: .automatic)
+        listTable.selectRow(at: indexPath, animated: true, scrollPosition: .none)
+        
+        // go into detail view of note
+        self.performSegue(withIdentifier: "showList", sender: nil)
+        
+    }
+    
+    
+    
     // MARK: - Table view data source
 
     override func numberOfSections(in tableView: UITableView) -> Int {
-        // #warning Incomplete implementation, return the number of sections
+        // return the number of sections
         return 1
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        // #warning Incomplete implementation, return the number of rows
-        
-        return lists.count
+        // return the number of rows
+        return listData.count
     }
 
-    
+    // this function iterates through the array to populate the table
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        //  indexPath is sort of like an iterator in C++ and returns an array of two ints representing the row and section of a given table cell
         let listCell = tableView.dequeueReusableCell(withIdentifier: "listCell", for: indexPath)
 
-        // Configure the cell...
-        listCell.textLabel?.text = lists[indexPath.row].title
+        //  sets the text in my textLabel storyboard object to the value in the lists[].title string at indexPath.row
+        listCell.textLabel?.text = listData[indexPath.row].title
 
         return listCell
     }
     
+    
+    // This function runs when the edit button is pressed
+    override func setEditing(_ editing: Bool, animated: Bool) {
+        //  You always have to call the constructore of the superclass in iOS
+        super.setEditing(editing, animated: animated)
+        //  calls the set editing class of the table object
+        listTable.setEditing(editing, animated: animated)
+        
+        save()
+    }
+    
+    //  removes a row when the delete button is pressed while in editing mode (after pressing the edit button
+    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        //  removes the data from the lists array
+        listData.remove(at: indexPath.row)
+        
+        //  removes the row from the table view
+        listTable.deleteRows(at: [indexPath], with: .fade)
 
+    }
+    
+    // MARK: - Navigation
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        //  currentItem = data[indexPath.row]
+        //currentItem = lists[indexPath.row].title + "\n"
+        //currentItem = listData[indexPath.row].title
+        //currentItemChecklist = listData[indexPath.row].checklist
+           
+        //print("indexPath = \(indexPath)")
+        //  currentItem = notes[indexPath.row]
+        performSegue(withIdentifier: "showList", sender: nil)
+    }
+
+    // In a storyboard-based application, you will often want to do a little preparation before navigation
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        // Get the new view controller using segue.destination.
+        // Pass the selected object to the new view controller.
+        /*if let listViewController = segue.destination as? ListViewController
+        {
+            listViewController.listTitle = currentItem
+            listViewController.checklist = currentItemChecklist
+        }*/
+        
+        
+        let listViewController = segue.destination as! ListViewController
+        
+        selectedRow = listTable.indexPathForSelectedRow!.row
+        
+        listViewController.masterView = self
+        
+        listViewController.setListTitle(t: listData[selectedRow].title)
+    }
+    
+    
+    
+    // MARK: - Data Persistence
+    
+    func save() {
+        
+        var listTitlesToSave: [String] = []
+        
+        for list in listData {
+            listTitlesToSave.append(list.title)
+        }
+        
+        let a = NSArray(array: listTitlesToSave as [Any])
+        
+        do {
+            try a.write(to: listFileURL)
+            print("saved list data")
+        } catch {
+            print("error writing to file")
+        }
+        
+    }
+    
+    
+    func load() {
+        
+        //  if let loadedData: [String] = NSArray(contentsOf: noteFileURL) as? [String] {
+        if let loadedData: [String] = NSArray(contentsOf: listFileURL) as? [String] {
+            print("loaded list data")
+            
+            
+            for index in loadedData {
+                let loadedListTitle: List = List(title: index, checklist: [""])
+                listData.append(loadedListTitle)
+            }
+            
+            listTable.reloadData()
+        }
+        
+    }
+    
+ 
+ 
+ 
+    // MARK: - Functions that were included in the template but are not yet being used
     /*
     // Override to support conditional editing of the table view.
     override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
@@ -85,7 +236,7 @@ class ListTableViewController: UITableViewController {
             tableView.deleteRows(at: [indexPath], with: .fade)
         } else if editingStyle == .insert {
             // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-        }    
+        }
     }
     */
 
@@ -103,30 +254,5 @@ class ListTableViewController: UITableViewController {
         return true
     }
     */
-
-    
-    // MARK: - Navigation
-    
-    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        //  currentItem = data[indexPath.row]
-        //currentItem = lists[indexPath.row].title + "\n"
-        currentItem = lists[indexPath.row].title
-        currentItemChecklist = lists[indexPath.row].checklist
-           
-        print("indexPath = \(indexPath)")
-        //  currentItem = notes[indexPath.row]
-        performSegue(withIdentifier: "showList", sender: nil)
-    }
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
-        if let listViewController = segue.destination as? ListViewController {
-            listViewController.listTitle = currentItem
-            listViewController.checklist = currentItemChecklist
-        }
-    }
-    
 
 }

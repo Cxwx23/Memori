@@ -33,13 +33,13 @@ class NoteViewController: UIViewController {
     
     //  Runs whenever the view is selected, after the first time it is loaded
     
-    /*
+    
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         //  This displays the title and notes from the table view when the view appears after already having been loaded
         textView.text = text
     }
-    */
+    
     
     
     func setText(t:String) {
