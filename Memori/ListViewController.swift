@@ -10,7 +10,9 @@ import UIKit
 class ListViewController: UIViewController {
     
     //  A connection to the text view ovject on the List View Object in the storyboard
-    @IBOutlet weak var listTextView: UITextView!
+    //@IBOutlet weak var listTextView: UITextView!
+    @IBOutlet weak var listTextField: UITextField!
+    
     
     var listTitle: String = ""      //  Variable to hold the title of the checklist
     var checklist: [String] = [""]  //  Variable to hold the actual checklist
@@ -22,12 +24,18 @@ class ListViewController: UIViewController {
         super.viewDidLoad()
         
         //  Adds the title of the checklist to the view
-        listTextView.text = listTitle
+        //  listTextView.text = listTitle
+        listTextField.text = listTitle
+        
+        //listTextField.text = listTitle
         
         //  Loops through the checklist adding the items on the list to the view
+        /*
         for item in checklist {
-            listTextView.text.append("\n" + item)
+            //listTextView.text.append("\n" + item)
+            
         }
+        */
     }
     
     //  Runs whenever the view is selected, after the first time the view is loaded
@@ -36,12 +44,16 @@ class ListViewController: UIViewController {
         super.viewDidAppear(animated)
         
         //  This currently displays the title from the table view when the view appears after already having been loaded
-        listTextView.text = listTitle
+        //  listTextView.text = listTitle
+        listTextField.text = listTitle
         
         //  Loops through the checklist adding the items on the list to the view
+        /*
         for item in checklist {
-            listTextView.text.append("\n" + item)
+            //listTextView.text.append("\n" + item)
+            listTextField.text.append(item)
         }
+        */
     }
     
     func setListTitle(t:String) {
@@ -49,17 +61,22 @@ class ListViewController: UIViewController {
         listTitle = t
         
         if isViewLoaded {
-            listTextView.text = t
+            //listTextView.text = t
+            listTextField.text = t
         }
     }
 
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        masterView.newRowText = listTextView.text
+        //masterView.newRowText = listTextView.text
+        masterView.newRowText = listTextField.text!
+        
+        
         //  print("calling resignFirstResponder")
         //  super.save()    // this did not work
-        listTextView.resignFirstResponder()
+        //listTextView.resignFirstResponder()
+        listTextField.resignFirstResponder()
     }
     
 

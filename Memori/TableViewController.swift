@@ -38,7 +38,7 @@ class TableViewController: UITableViewController {
         // accesses the document directory
         let baseURL = try! FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false)
         
-        // accesses the notes.txt file.
+        // accesses the SavedNoteArray.txt file.
         noteFileURL = baseURL.appendingPathComponent("SavedNoteArray.txt")    // used to be "notes.txt"
         
         // load data from persistent storage
@@ -49,9 +49,20 @@ class TableViewController: UITableViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        if selectedRow == -1 {
+        
+        print("index = \(selectedRow)")
+        
+        //  This was a workaround which prevents an error when the NoteTableView is about to appear, coming from ListTableView
+        //  when the user has just deleted a note with an index outside the range for the NoteTable
+        if selectedRow >= noteData.count {
+            selectedRow = 0;
+            print("index = \(selectedRow)")
+        }
+        
+        if selectedRow == -1 || noteData.count == 0 {
             return
         }
+        
         
         //data[selectedRow] = newRowText
         noteData[selectedRow].note = newRowText

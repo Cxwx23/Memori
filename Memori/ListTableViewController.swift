@@ -23,9 +23,11 @@ class ListTableViewController: UITableViewController {
     
     var currentItem: String = ""
     var currentItemChecklist: [String] = [""]
+    
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         
         //  sets the datasource for the listTable object -
         listTable.dataSource = self
@@ -53,12 +55,20 @@ class ListTableViewController: UITableViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+
+        print("index = \(selectedRow)")
         
-        if selectedRow == -1 {
+        //  This was a workaround which prevents an error when the ListTableView is about to appear, coming from NoteTableView
+        //  when the user has just deleted a note with an index outside the range for the ListTable
+        if selectedRow >= listData.count {
+            selectedRow = 0;
+            print("index = \(selectedRow)")
+        }
+         
+        if selectedRow == -1 || listData.count == 0 {
             return
         }
         
-        //data[selectedRow] = newRowText
         listData[selectedRow].title = newRowText
         
         if newRowText == "" {
@@ -79,7 +89,10 @@ class ListTableViewController: UITableViewController {
         }
         
         //  creates a new list with the entered title and an empty list (for now)
-        let list: List = List(title: "", checklist: [""])
+        //let list: List = List(title: "", checklist: [""], checklistItems: [ListItem])
+        //let list: List = List(title: "", checklist: [""])
+        
+        let list: List = List(title: "", checklist: [])
         
         //  inserts the list into the lists array
         listData.insert(list, at: 0)
@@ -181,10 +194,11 @@ class ListTableViewController: UITableViewController {
     
     func save() {
         
-        var listTitlesToSave: [String] = []
+        var listTitlesToSave: [String] = [""]
         
-        for list in listData {
-            listTitlesToSave.append(list.title)
+        
+        for lists in listData {
+            listTitlesToSave.append(lists.title)
         }
         
         let a = NSArray(array: listTitlesToSave as [Any])
@@ -195,6 +209,37 @@ class ListTableViewController: UITableViewController {
         } catch {
             print("error writing to file")
         }
+        
+        /*for lists in listData {
+            for items in listData[lists] {
+                
+            }
+        }*/
+        var listItems: [[[Any]]] = [[[Any]]]()
+        
+        /*for list in listData {
+            for item in 0...3 {
+                for bool in 0...1 {
+                    listItems.append([listData[list].title, listData[list].checklist[item], listData[list].checklist[checked])
+            }
+        }*/
+            
+        
+        print(listItems)
+
+        //print(listData)
+        
+        //let fileUrl = NSURL(fileURLWithPath: "/tmp/foo.plist") // Your path here
+        //let listOfTasks = [["Hi", "Hello", "12:00"], ["Hey there", "What's up?", "3:17"]]
+
+        // Save to file
+        //(listOfTasks as NSArray).write(to: fileUrl as URL, atomically: true)
+
+        // Read from file
+        //let savedArray = NSArray(contentsOf: fileUrl as URL) as! [[String]]
+
+        //print(savedArray)
+        
         
     }
     
@@ -207,7 +252,7 @@ class ListTableViewController: UITableViewController {
             
             
             for index in loadedData {
-                let loadedListTitle: List = List(title: index, checklist: [""])
+                let loadedListTitle: List = List(title: index, checklist: [])
                 listData.append(loadedListTitle)
             }
             
